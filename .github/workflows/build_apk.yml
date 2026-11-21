@@ -23,13 +23,13 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config \
-            zlib1g-dev libncurses-dev libncurses6 cmake libffi-dev libssl-dev \
-            file wget curl
+            git zip unzip openjdk-17-jdk python3-pip autoconf automake m4 \
+            libtool libtool-bin pkg-config zlib1g-dev libncurses-dev libncurses6 \
+            cmake libffi-dev libssl-dev file wget curl
 
       - name: Install Buildozer and Cython
         run: |
-          python3 -m pip install --upgrade pip wheel setuptools
+          python3 -m pip install --upgrade pip wheel setuptools\<80
           python3 -m pip install buildozer cython==0.29.36 virtualenv
 
       - name: Cache Buildozer and Android SDK/NDK
@@ -38,9 +38,9 @@ jobs:
           path: |
             ~/.buildozer
             ~/.gradle
-          key: buildozer-${{ runner.os }}-${{ hashFiles('buildozer.spec', 'main.py', 'smart_editor_core.py') }}
+          key: buildozer-v2-${{ runner.os }}-${{ hashFiles('buildozer.spec', 'main.py', 'smart_editor_core.py') }}
           restore-keys: |
-            buildozer-${{ runner.os }}-
+            buildozer-v2-${{ runner.os }}-
 
       - name: Build APK with Buildozer
         run: |
