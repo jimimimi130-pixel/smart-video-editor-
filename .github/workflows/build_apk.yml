@@ -38,12 +38,15 @@ jobs:
           path: |
             ~/.buildozer
             ~/.gradle
-          key: buildozer-v2-${{ runner.os }}-${{ hashFiles('buildozer.spec', 'main.py', 'smart_editor_core.py') }}
+          key: buildozer-v3-${{ runner.os }}-${{ hashFiles('buildozer.spec', 'main.py', 'smart_editor_core.py') }}
           restore-keys: |
-            buildozer-v2-${{ runner.os }}-
+            buildozer-v3-${{ runner.os }}-
 
       - name: Build APK with Buildozer
+        env:
+          ACLOCAL_PATH: /usr/share/aclocal
         run: |
+          rm -rf .buildozer/android/platform/build-*/build/other_builds/libffi
           buildozer android debug
 
       - name: Upload APK artifact
