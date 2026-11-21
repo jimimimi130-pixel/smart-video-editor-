@@ -23,14 +23,14 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            git zip unzip openjdk-17-jdk python3-pip autoconf automake m4 \
-            libtool libtool-bin pkg-config zlib1g-dev libncurses-dev libncurses6 \
-            cmake libffi-dev libssl-dev file wget curl
+            git zip unzip openjdk-17-jdk python3-pip libtool libtool-bin \
+            autoconf automake m4 pkg-config zlib1g-dev libncurses-dev \
+            libncurses6 cmake libffi-dev libssl-dev file wget curl
 
       - name: Install Buildozer and Cython
         run: |
           python3 -m pip install --upgrade pip wheel setuptools\<80
-          python3 -m pip install buildozer cython==0.29.36 virtualenv
+          python3 -m pip install buildozer==1.5.0 cython==0.29.36 virtualenv
 
       - name: Cache Buildozer and Android SDK/NDK
         uses: actions/cache@v4
@@ -38,15 +38,15 @@ jobs:
           path: |
             ~/.buildozer
             ~/.gradle
-          key: buildozer-v3-${{ runner.os }}-${{ hashFiles('buildozer.spec', 'main.py', 'smart_editor_core.py') }}
+          key: buildozer-v4-${{ runner.os }}-${{ hashFiles('buildozer.spec', 'main.py', 'smart_editor_core.py') }}
           restore-keys: |
-            buildozer-v3-${{ runner.os }}-
+            buildozer-v4-${{ runner.os }}-
 
       - name: Build APK with Buildozer
         env:
           ACLOCAL_PATH: /usr/share/aclocal
         run: |
-          rm -rf .buildozer/android/platform/build-*/build/other_builds/libffi
+          rm -rf .buildozer ~/.buildozer/android/platform/build-*/build/other_builds/libffi
           buildozer android debug
 
       - name: Upload APK artifact
